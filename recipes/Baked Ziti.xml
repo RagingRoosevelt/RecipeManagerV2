@@ -1,0 +1,25 @@
+<?xml version ="1.0"?>
+<data>
+	<recipe name="Baked Ziti">
+		<servings>10</servings>
+        <prep time="??" unit="min"/>
+        <cook time="35" timeUnit="min" temp="175" tempUnit="C"/>
+		<ingredients>
+			<ingredient name="dry ziti pasta" quantity="1" unit="pound"/>
+			<ingredient name="onion, chopped" quantity="1" unit=" "/>
+			<ingredient name="lean ground beef" quantity="1" unit="pound"/>
+			<ingredient name="spaghetti sauce" quantity="2" unit="ounce"/>
+			<ingredient name="provolone cheese, sliced" quantity="6" unit="ounces"/>
+			<ingredient name="sour cream" quantity="1/2" unit="cups"/>
+			<ingredient name="mozzarella cheese, shredded" quantity="6" unit="ounces"/>
+			<ingredient name="grated Parmesan cheese" quantity="2" unit="tablespoons"/>
+		</ingredients>
+		<procedure>Bring a large pot of lightly salted water to a boil. Add ziti pasta, and cook until al dente, about 8 minutes; drain.
+
+In a large skillet, brown onion and ground beef over medium heat. Add spaghetti sauce, and simmer 15 minutes.
+
+Preheat the oven to 350 degrees F (175 degrees C). Butter a 9x13 inch baking dish. Layer as follows: 1/2 of the ziti, Provolone cheese, sour cream, 1/2 sauce mixture, remaining ziti, mozzarella cheese and remaining sauce mixture. Top with grated Parmesan cheese.
+
+Bake for 30 minutes in the preheated oven, or until cheeses are melted.</procedure>
+	</recipe>
+</data>
