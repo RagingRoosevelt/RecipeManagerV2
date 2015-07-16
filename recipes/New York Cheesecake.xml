@@ -1,0 +1,26 @@
+<?xml version ="1.0"?>
+<data>
+	<recipe name="New York Cheesecake">
+		<servings>12</servings>
+        <prep time="" unit=""/>
+        <cook time="1" timeUnit="hr" temp="175" tempUnit="C"/>
+		<ingredients>
+			<ingredient name="graham crackers, crushed" quantity="15" unit=" "/>
+			<ingredient name="butter, melted" quantity="2" unit="tablespoons"/>
+			<ingredient name="cream cheese;" quantity="32" unit="ounce"/>
+			<ingredient name="white sugar" quantity="1.5" unit="cups"/>
+			<ingredient name="milk" quantity="3/4" unit="cup"/>
+			<ingredient name="eggs" quantity="4" unit=" "/>
+			<ingredient name="sour cream" quantity="1" unit="cup"/>
+			<ingredient name="vanilla extract" quantity="1" unit="tablespoon"/>
+			<ingredient name="all-purpose flour" quantity="1/4" unit="cup"/>
+		</ingredients>
+		<procedure>Preheat oven to 350 degrees F (175 degrees C). Grease a 9 inch springform pan.
+
+In a medium bowl, mix graham cracker crumbs with melted butter. Press onto bottom of springform pan.
+
+ In a large bowl, mix cream cheese with sugar until smooth. Blend in milk, and then mix in the eggs one at a time, mixing just enough to incorporate. Mix in sour cream, vanilla and flour until smooth. Pour filling into prepared crust.
+
+Bake in preheated oven for 1 hour. Turn the oven off, and let cake cool in oven with the door closed for 5 to 6 hours; this prevents cracking. Chill in refrigerator until serving.</procedure>
+	</recipe>
+</data>

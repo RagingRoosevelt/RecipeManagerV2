@@ -1,0 +1,23 @@
+<?xml version ="1.0"?>
+<data>
+	<recipe name="Grandma's Gingerbread Pancakes">
+		<servings>10</servings>
+        <prep time="" unit=""/>
+        <cook time="" timeUnit="" temp="" tempUnit=""/>
+		<ingredients>
+			<ingredient name="all-purpose flour" quantity="1/2" unit="cups"/>
+			<ingredient name="baking powder" quantity="1" unit="teaspoon"/>
+			<ingredient name="baking soda" quantity="1/4" unit="teaspoon"/>
+			<ingredient name="salt" quantity="1/4" unit="teaspoon"/>
+			<ingredient name="ground dried ginger" quantity="1/2" unit="teaspoon"/>
+			<ingredient name="ground cinnamon" quantity="1" unit="teaspoon"/>
+			<ingredient name="egg" quantity="1" unit=" "/>
+			<ingredient name="vanilla extract" quantity="1/2" unit="teaspoon"/>
+			<ingredient name="molasses" quantity="1/4" unit="cup"/>
+			<ingredient name="water" quantity="1/2" unit="cups"/>
+		</ingredients>
+		<procedure>Whisk the flour, baking powder, baking soda, salt, ginger, and cinnamon in a bowl; set aside. Beat the egg in a separate mixing bowl with the vanilla and molasses until smooth. Whisk in the water until completely incorporated. Stir the flour mixture into the molasses mixture until just combined -- a few lumps are okay.
+
+Heat a lightly oiled griddle over medium-high heat. Drop batter by large spoonfuls onto the griddle, and cook until bubbles form and the edges are dry. Flip, and cook until browned on the other side. Repeat with remaining batter.</procedure>
+	</recipe>
+</data>

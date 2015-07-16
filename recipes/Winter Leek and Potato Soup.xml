@@ -1,0 +1,26 @@
+<?xml version ="1.0"?>
+<data>
+	<recipe name="Winter Leek and Potato Soup">
+		<servings>6</servings>
+        <prep time="" unit=""/>
+        <cook time="" timeUnit="" temp="" tempUnit=""/>
+		<ingredients>
+			<ingredient name="butter, or more if needed" quantity="2" unit="tablespoons"/>
+			<ingredient name="leeks, cleaned and chopped" quantity="2" unit=" "/>
+			<ingredient name="chopped onion" quantity="1/2" unit="cup"/>
+			<ingredient name="potatoes, peeled and cubed" quantity="6" unit=" "/>
+			<ingredient name="chicken broth" quantity="4" unit="cups"/>
+			<ingredient name="half-and-half" quantity="1" unit="cup"/>
+			<ingredient name="shredded Cheddar cheese" quantity="4" unit="ounces"/>
+			<ingredient name="chopped fresh parsley" quantity="1" unit="tablespoon"/>
+			<ingredient name="garlic powder" quantity="1" unit="teaspoon"/>
+		</ingredients>
+		<procedure>Melt butter in a pot over medium heat. Cook and stir leeks and onion until vegetables are tender, about 5 minutes.
+
+Stir potatoes and chicken broth into onion mixture; simmer until potatoes are tender, 20 to 25 minutes.
+
+Pour half-and-half into potato soup and continue to simmer until slightly thickened, about 15 minutes more.
+
+Stir Cheddar cheese, parsley, garlic powder, salt, and black pepper into soup until cheese is melted, about 5 minutes.</procedure>
+	</recipe>
+</data>

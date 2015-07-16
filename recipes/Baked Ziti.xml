@@ -6,7 +6,7 @@
         <cook time="35" timeUnit="min" temp="175" tempUnit="C"/>
 		<ingredients>
 			<ingredient name="dry ziti pasta" quantity="1" unit="pound"/>
-			<ingredient name="onion, chopped" quantity="1" unit=" "/>
+			<ingredient name="onion, chopped" quantity="1" unit=""/>
 			<ingredient name="lean ground beef" quantity="1" unit="pound"/>
 			<ingredient name="spaghetti sauce" quantity="2" unit="ounce"/>
 			<ingredient name="provolone cheese, sliced" quantity="6" unit="ounces"/>

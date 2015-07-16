@@ -1,0 +1,29 @@
+<?xml version ="1.0"?>
+<data>
+	<recipe name="Slow Cooker Stuffing">
+		<servings>16</servings>
+        <prep time="" unit=""/>
+        <cook time="8" timeUnit="hr" temp="" tempUnit=""/>
+		<ingredients>
+			<ingredient name="butter or margarine" quantity="1" unit="cup"/>
+			<ingredient name="chopped onion" quantity="2" unit="cups"/>
+			<ingredient name="chopped celery" quantity="2" unit="cups"/>
+			<ingredient name="chopped fresh parsley" quantity="1/4" unit="cup"/>
+			<ingredient name="sliced mushrooms" quantity="1" unit="ounces"/>
+			<ingredient name="dry bread cubes" quantity="1" unit="cups"/>
+			<ingredient name="poultry seasoning" quantity="1" unit="teaspoon"/>
+			<ingredient name="dried sage" quantity="1/2" unit="teaspoons"/>
+			<ingredient name="dried thyme" quantity="1" unit="teaspoon"/>
+			<ingredient name="dried marjoram" quantity="1/2" unit="teaspoon"/>
+			<ingredient name="salt" quantity="1/2" unit="teaspoons"/>
+			<ingredient name="ground black pepper" quantity="1/2" unit="teaspoon"/>
+			<ingredient name="chicken broth, or as needed" quantity="1/2" unit="cups"/>
+			<ingredient name="eggs, beaten" quantity="2" unit=" "/>
+		</ingredients>
+		<procedure>Melt butter or margarine in a skillet over medium heat. Cook onion, celery, mushroom, and parsley in butter, stirring frequently.
+
+Spoon cooked vegetables over bread cubes in a very large mixing bowl. Season with poultry seasoning, sage, thyme, marjoram, and salt and pepper. Pour in enough broth to moisten, and mix in eggs. Transfer mixture to slow cooker, and cover.
+
+Cook on High for 45 minutes, then reduce heat to Low, and cook for 4 to 8 hours.</procedure>
+	</recipe>
+</data>

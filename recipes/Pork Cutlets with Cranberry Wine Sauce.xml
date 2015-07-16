@@ -1,0 +1,23 @@
+<?xml version ="1.0"?>
+<data>
+	<recipe name="Pork Cutlets with Cranberry Wine Sauce">
+		<servings>4</servings>
+        <prep time="" unit=""/>
+        <cook time="15" timeUnit="min" temp="350" tempUnit="F"/>
+		<ingredients>
+			<ingredient name="olive oil" quantity="1" unit="tablespoon"/>
+			<ingredient name="boneless pork chops, 1/2-inch thick" quantity="4" unit=" "/>
+			<ingredient name="salt and pepper to taste" quantity="2" unit="cloves"/>
+			<ingredient name="garlic, minced" quantity="1/4" unit="cups"/>
+			<ingredient name="dry white wine" quantity="1/4" unit="cups"/>
+			<ingredient name="whole berry cranberry sauce" quantity="1" unit="tablespoon"/>
+			<ingredient name="thinly sliced fresh sage leaves" quantity="1" unit="tablespoon"/>
+			<ingredient name="chopped fresh thyme" quantity="1" unit="tablespoon"/>
+		</ingredients>
+		<procedure>Preheat the oven to 350 degrees F (175 degrees C).
+
+Heat the olive oil in a large skillet over medium-high heat. Season the pork with salt and pepper. Fry in the oil until browned on each side, 2 to 3 minutes. Transfer the pork to a baking dish, and place in the preheated oven.
+
+Reduce the heat under the skillet to medium and add the garlic. Cook and stir just until fragrant. Stir in the wine and cranberry sauce. Simmer for a few minutes until the sauce thickens slightly. Stir in the sage and thyme. Return the pork to the skillet and turn to coat with the sauce. Place on plates to serve and garnish with fresh parsley.</procedure>
+	</recipe>
+</data>

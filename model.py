@@ -4,30 +4,57 @@ import sqlite3 as sql
 import random 
 
 class Model:
-    
-    
     # Initialize database if it doesn't exist.
     def __init__(self):
         dbname = path.join(path.dirname(path.abspath(__file__)),'recipes.db')
         
-        nodb = True
+        # If the db file doesn't exist, we'll have to create a db
         if not path.isfile(dbname):
-            print("warning: Recipe database not found, creating new database at %s\n" % str(dbname))
+            print("warning: Recipe database not found, creating new database file at %s..." % str(dbname))
+            nodb = True
+        else:
             nodb = True
         
+        # check if we can connect to the db (is it corrupt?)
         try:
             self.dbConnection = sql.connect(dbname)
         except:
             print("error: Problem creating or connecting to the database %s\n" % str(dbname))
             quit()
             
+        # establish the db cursor
         self.dbCursor = self.dbConnection.cursor()
+        
+        # If we're creating the db from scratch, we'll need to initialize the necessary tables and fields
         if nodb == True:
+            print("Initializing recipe database...")
             self.dbCursor.executescript("""
                 DROP TABLE IF EXISTS Recipes;
-                CREATE TABLE Recipes (id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Servings INTEGER, PrepTime INTEGER, PrepTimeUnit TEXT, CookTime INTEGER, CookTimeUnit TEXT, CookTemp INTEGER, CookTempUnit TEXT);
+                CREATE TABLE Recipes (
+                    RecipeID INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    Name TEXT, 
+                    Servings INTEGER, 
+                    PrepTime INTEGER, 
+                    PrepTimeUnit TEXT, 
+                    CookTime TEXT, 
+                    CookTimeUnit TEXT, 
+                    CookTemp TEXT, 
+                    CookTempUnit TEXT);
                 """)
-    
+            print("Initializing ingredient database...")
+            self.dbCursor.executescript("""
+                DROP TABLE IF EXISTS Ingredients;
+                CREATE TABLE Ingredients (
+                    IngredientID INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    RecipeID INT, 
+                    Name TEXT, 
+                    Quantity TEXT, 
+                    Unit TEXT,
+                    FOREIGN KEY (RecipeID) REFERENCES Recipes(RecipeID));
+                """)
+            print()
+            
+
     # check if "filename" is an XML file
     def isXML(self, filename):
         try:
@@ -35,7 +62,8 @@ class Model:
             return 1
         except:
             return -1
-            
+
+
     # get user input
     def getUserChoice(self,message,choices=("Y","N")):
         
@@ -44,21 +72,25 @@ class Model:
             print("error: Input is not one of the accepted inputs: " + str(choices))
             usrInput = input(message)
         return usrInput
-        
-    
+
+
     # add recipe to the database
     def dbAddRecipe(self, recipe):
         overwrite = None
     
-        #print(recipe)
+        # Assemble recipe metadata
         name = recipe['name']
         servings = recipe['servings']
         prepTime, prepTimeUnit = recipe['prep']
         cookTime, cookTimeUnit, cookTemp, cookTempUnit = recipe['cook']
-        #procedure = recipe['procedure']
+        # Assemble ingredient info
+        ingredients = []
+        for ingredient in recipe['ingredients']:
+            ingredients.append(recipe['ingredients'][ingredient])
+        '''procedure = recipe['procedure']'''
         
         # check for the existence of entry to be updated
-        self.dbCursor.execute("SELECT id FROM Recipes WHERE Name =:name", {"name": name})
+        self.dbCursor.execute("SELECT RecipeID FROM Recipes WHERE Name =:name", {"name": name})
         entry = self.dbCursor.fetchone()
         if entry is not None:
             if self.getUserChoice("warning: Recipe already exists.  Overwrite? (Y / N): ").upper() == "Y":
@@ -66,11 +98,18 @@ class Model:
             else:
                 overwrite = False
         
-        
+        # Insert the recipe
         if overwrite == None:
-            print("Adding recipe %s" % name)
+            print("\nAdding recipe %s..." % name)
+            # Insert recipe metadata
             self.dbCursor.execute("INSERT INTO Recipes VALUES(?,?,?,?,?,?,?,?,?);", (None, name, servings, prepTime, prepTimeUnit, cookTime, cookTimeUnit, cookTemp, cookTempUnit))
+            # Insert ingredients
+            recipeID = self.dbCursor.lastrowid
+            for ingredient in ingredients:
+                print(str((None, recipeID) + ingredient))
+                self.dbCursor.execute("INSERT INTO Ingredients VALUES (?,?,?,?,?);", (None, recipeID) + ingredient)
             self.dbConnection.commit()
+        # Or overwrite the recipe
         elif overwrite == True:
             print("Overwriting recipe %s" % name)
             self.dbCursor.execute("""UPDATE Recipes SET 
@@ -83,17 +122,20 @@ class Model:
                     CookTempUnit = ?
                     WHERE Name = ?
                 """, (servings,prepTime,prepTimeUnit,cookTime,cookTimeUnit,cookTemp,cookTempUnit,name))
+            #self.dbCursor.execute("""UPDATE Ingredients SET
+            #        
+            #""")
             self.dbConnection.commit()
         elif overwrite == False:
             print("warning: Nothing written to database")
-        
-        
-        
+
+
     # gets recipe by name
     def dbGetRecipe(self, recipeName):
         for row in self.dbCursor.execute("SELECT * FROM Recipes WHERE Name =:recipeName", {"recipeName": recipeName}):
-            print(row)
-    
+            print(str(row) + "\n")
+
+
     # reads XML file, "filename", and returns a nested dictionary containing all recipes found in the XML file
     def xmlRead(self,filename):
         if self.isXML(filename) < 1:
@@ -133,7 +175,8 @@ class Model:
             #    print(recipe + ":\n" + str(sorted(recipes[recipe].items())))
                 
             return recipes
-    
+
+
     # for a given XML file, imports the recipes from the file into the database (using xmlRead to parse the file)
     def xmlImport(self,filename):
         recipes = self.xmlRead(filename)
@@ -148,7 +191,6 @@ dir = "E:\\Dropbox\\Documents\\Programming\\Cookbook Maker V2\\recipes"
 
 model = Model()
 
-#recipes = model.xmlImport(path.join(dir,"several.xml"))
 recipes = model.xmlImport(path.join(dir,"Baked Ziti.xml"))
 recipes = model.xmlImport(path.join(dir,"Banana Bread.xml"))
 recipes = model.xmlImport(path.join(dir,"Chocolate-Candy Cane Cake.xml"))
@@ -162,7 +204,6 @@ if recipes != -1:
 model.dbGetRecipe("Baked Ziti")
 
 recipe = model.xmlRead(path.join(dir,"Salmon Chowder.xml"))['Salmon Chowder']
-recipe['name'] = "Chocolate-Candy Cane Cake"
-print(recipe)
+#recipe['name'] = "Chocolate-Candy Cane Cake"
 model.dbAddRecipe(recipe)
 

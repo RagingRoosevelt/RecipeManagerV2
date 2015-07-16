@@ -1,0 +1,18 @@
+<?xml version ="1.0"?>
+<data>
+	<recipe name="Sausage Cheese Balls">
+		<servings>36</servings>
+        <prep time="" unit=""/>
+        <cook time="" timeUnit="" temp="" tempUnit=""/>
+		<ingredients>
+			<ingredient name="Regular Flavor Jimmy Dean Pork Sausage" quantity="2" unit="ounce"/>
+			<ingredient name="all-purpose baking mix" quantity="1/2" unit="cups"/>
+			<ingredient name="shredded sharp Cheddar cheese" quantity="4" unit="cups"/>
+			<ingredient name="finely chopped onion" quantity="1/2" unit="cup"/>
+			<ingredient name="finely chopped celery" quantity="1/2" unit="cup"/>
+			<ingredient name="black pepper" quantity="2" unit="teaspoons"/>
+			<ingredient name="minced garlic" quantity="2" unit="teaspoons"/>
+		</ingredients>
+		<procedure>Preheat oven to 375 F. Combine all ingredients in a large mixing bowl; stir well. Form into 1inch balls. Place on ungreased baking sheet; bake 18-20 minutes or until golden brown. Remove from oven; cool 5 minutes before removing from pan. Serve with cocktail forks or toothpicks.</procedure>
+	</recipe>
+</data>
