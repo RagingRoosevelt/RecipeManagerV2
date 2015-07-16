@@ -2,7 +2,7 @@
 <data>
 	<recipe name="Baked Ziti">
 		<servings>10</servings>
-        <prep time="??" unit="min"/>
+        <prep time="??" unit="??"/>
         <cook time="35" timeUnit="min" temp="175" tempUnit="C"/>
 		<ingredients>
 			<ingredient name="dry ziti pasta" quantity="1" unit="pound"/>
@@ -25,7 +25,7 @@ Bake for 30 minutes in the preheated oven, or until cheeses are melted.</procedu
     
     <recipe name="Banana Bread">
 		<servings>12</servings>
-		<prep time="??" unit="min"/>
+		<prep time="??" unit="??"/>
         <cook time="1" timeUnit="hr" temp="350" tempUnit="F"/>
 		<ingredients>
 			<ingredient name="all-purpose flour" quantity="2" unit="cups"/>

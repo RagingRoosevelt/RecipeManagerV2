@@ -1,6 +1,7 @@
 python recipe dict format
 
 recipe = {
+        'name': 'Baked Ziti',
         'ingredients': {
             0: ('dry ziti pasta', '1', 'pound'), 
             1: ('onion, chopped', '1', ' '), 

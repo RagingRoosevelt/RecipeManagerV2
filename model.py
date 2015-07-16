@@ -1,32 +1,32 @@
 import xml.etree.ElementTree as ET
 import os.path as path
 import sqlite3 as sql
+import random 
 
 class Model:
     
+    
+    # Initialize database if it doesn't exist.
     def __init__(self):
         dbname = path.join(path.dirname(path.abspath(__file__)),'recipes.db')
         
         nodb = True
         if not path.isfile(dbname):
-            print("warning: Recipe database not found, creating new database at " + str(dbname))
+            print("warning: Recipe database not found, creating new database at %s\n" % str(dbname))
             nodb = True
         
         try:
             self.dbConnection = sql.connect(dbname)
         except:
-            print("error: Problem creating or connecting to the database " + str(dbname))
+            print("error: Problem creating or connecting to the database %s\n" % str(dbname))
             quit()
             
         self.dbCursor = self.dbConnection.cursor()
         if nodb == True:
             self.dbCursor.executescript("""
                 DROP TABLE IF EXISTS Recipes;
-                CREATE TABLE Recipes (id INTEGER PRIMARY KEY, Name TEXT, Servings INTEGER, PrepTime INTEGER, PrepTimeUnit TEXT, CookTime INTEGER, CookTimeUnit TEXT, CookTemp INTEGER, CookTempUnit TEXT);
-                INSERT INTO Recipes VALUES(1, 'Baked Ziti', 10, 0, '??', 35, 'min', 175, 'C');
-                INSERT INTO Recipes VALUES(2, 'Banana Bread', 12, 0, '??', 1, 'hr', 350, 'F');
+                CREATE TABLE Recipes (id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Servings INTEGER, PrepTime INTEGER, PrepTimeUnit TEXT, CookTime INTEGER, CookTimeUnit TEXT, CookTemp INTEGER, CookTempUnit TEXT);
                 """)
-            
     
     # check if "filename" is an XML file
     def isXML(self, filename):
@@ -37,21 +37,28 @@ class Model:
             return -1
             
     # add recipe to the database
-    def dbAddRecipe(recipe):
+    def dbAddRecipe(self, recipe):
+        #print(recipe)
         name = recipe['name']
         servings = recipe['servings']
         prepTime, prepTimeUnit = recipe['prep']
         cookTime, cookTimeUnit, cookTemp, cookTempUnit = recipe['cook']
         #procedure = recipe['procedure']
         
-        self.dbCursor.execute("INSERT INTO RECIPES VALUES(?,?,?,?,?,?,?,?,?)", (ID, name, servings, prepTime, prepTimeUnit, cookTime, cookTimeUnit, cookTemp, cookTempUnit))
+        print("Adding recipe %s" % name)
+        self.dbCursor.execute("INSERT INTO Recipes VALUES(?,?,?,?,?,?,?,?,?);", (None, name, servings, prepTime, prepTimeUnit, cookTime, cookTimeUnit, cookTemp, cookTempUnit))
+        self.dbConnection.commit()
         
-        
+    # gets recipe by name
+    def dbGetRecipe(self, recipeName):
+        for row in self.dbCursor.execute("SELECT * FROM Recipes WHERE Name =:recipeName", {"recipeName": recipeName}):
+            print(row)
     
-    # imports XML file, "filename", and returns a nested dictionary containing all recipes found in the XML file
-    def xmlImport(self,filename):
+    # reads XML file, "filename", and returns a nested dictionary containing all recipes found in the XML file
+    def xmlRead(self,filename):
         if self.isXML(filename) < 1:
-            print("error: provided file is not and XML file!")
+            print("error: provided file is not and XML file!\n")
+            quit()
             return -1
         else:
             recipes = {}
@@ -87,14 +94,30 @@ class Model:
                 
             return recipes
     
-filename = "E:\\Dropbox\\Documents\\Programming\\Cookbook Maker Py\\recipes\\several.xml"
-#filename = "E:\\Dropbox\\Documents\\Programming\\Cookbook Maker Py\\recipes\\Baked Ziti.xml"
+    # for a given XML file, imports the recipes from the file into the database (using xmlRead to parse the file)
+    def xmlImport(self,filename):
+        recipes = self.xmlRead(filename)
+        
+        #print(recipes)
+        
+        for name, recipe in recipes.items():
+            self.dbAddRecipe(recipe)
+        return recipes
+    
+dir = "E:\\Dropbox\\Documents\\Programming\\Cookbook Maker V2\\recipes"
 
 model = Model()
 
-recipes = model.xmlImport(filename)
+#recipes = model.xmlImport(path.join(dir,"several.xml"))
+recipes = model.xmlImport(path.join(dir,"Baked Ziti.xml"))
+recipes = model.xmlImport(path.join(dir,"Banana Bread.xml"))
+recipes = model.xmlImport(path.join(dir,"Chocolate-Candy Cane Cake.xml"))
+
 if recipes != -1:
     for recipe in recipes:
+        print()
         #print(recipe + ":\n" + str(sorted(recipes[recipe].items())))
-        print(recipe + ":\n" + str(recipes[recipe]))
+        #print(recipe + ":\n" + str(recipes[recipe]))
+        
+model.dbGetRecipe("Baked Ziti")
 

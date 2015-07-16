@@ -2,7 +2,7 @@
 <data>
 	<recipe name="Baked Ziti">
 		<servings>10</servings>
-        <prep time="??" unit="min"/>
+        <prep time="??" unit="??"/>
         <cook time="35" timeUnit="min" temp="175" tempUnit="C"/>
 		<ingredients>
 			<ingredient name="dry ziti pasta" quantity="1" unit="pound"/>
