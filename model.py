@@ -36,8 +36,20 @@ class Model:
         except:
             return -1
             
+    # get user input
+    def getUserChoice(self,message,choices=("Y","N")):
+        
+        usrInput = input(message)
+        while usrInput.upper() not in choices:
+            print("error: Input is not one of the accepted inputs: " + str(choices))
+            usrInput = input(message)
+        return usrInput
+        
+    
     # add recipe to the database
     def dbAddRecipe(self, recipe):
+        overwrite = None
+    
         #print(recipe)
         name = recipe['name']
         servings = recipe['servings']
@@ -45,9 +57,37 @@ class Model:
         cookTime, cookTimeUnit, cookTemp, cookTempUnit = recipe['cook']
         #procedure = recipe['procedure']
         
-        print("Adding recipe %s" % name)
-        self.dbCursor.execute("INSERT INTO Recipes VALUES(?,?,?,?,?,?,?,?,?);", (None, name, servings, prepTime, prepTimeUnit, cookTime, cookTimeUnit, cookTemp, cookTempUnit))
-        self.dbConnection.commit()
+        # check for the existence of entry to be updated
+        self.dbCursor.execute("SELECT id FROM Recipes WHERE Name =:name", {"name": name})
+        entry = self.dbCursor.fetchone()
+        if entry is not None:
+            if self.getUserChoice("warning: Recipe already exists.  Overwrite? (Y / N): ").upper() == "Y":
+                overwrite = True
+            else:
+                overwrite = False
+        
+        
+        if overwrite == None:
+            print("Adding recipe %s" % name)
+            self.dbCursor.execute("INSERT INTO Recipes VALUES(?,?,?,?,?,?,?,?,?);", (None, name, servings, prepTime, prepTimeUnit, cookTime, cookTimeUnit, cookTemp, cookTempUnit))
+            self.dbConnection.commit()
+        elif overwrite == True:
+            print("Overwriting recipe %s" % name)
+            self.dbCursor.execute("""UPDATE Recipes SET 
+                    Servings = ?,
+                    PrepTime = ?,
+                    PrepTimeUnit = ?,
+                    CookTime = ?,
+                    CookTimeUnit = ?,
+                    CookTemp = ?,
+                    CookTempUnit = ?
+                    WHERE Name = ?
+                """, (servings,prepTime,prepTimeUnit,cookTime,cookTimeUnit,cookTemp,cookTempUnit,name))
+            self.dbConnection.commit()
+        elif overwrite == False:
+            print("warning: Nothing written to database")
+        
+        
         
     # gets recipe by name
     def dbGetRecipe(self, recipeName):
@@ -120,4 +160,9 @@ if recipes != -1:
         #print(recipe + ":\n" + str(recipes[recipe]))
         
 model.dbGetRecipe("Baked Ziti")
+
+recipe = model.xmlRead(path.join(dir,"Salmon Chowder.xml"))['Salmon Chowder']
+recipe['name'] = "Chocolate-Candy Cane Cake"
+print(recipe)
+model.dbAddRecipe(recipe)
 

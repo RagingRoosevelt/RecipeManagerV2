@@ -1,0 +1,27 @@
+<?xml version ="1.0"?>
+<data>
+	<recipe name="Salmon Chowder">
+		<servings>8</servings>
+        <prep time="" unit=""/>
+        <cook time="" timeUnit="" temp="" tempUnit=""/>
+		<ingredients>
+			<ingredient name="butter" quantity="3" unit="tablespoons"/>
+			<ingredient name="chopped onion" quantity="3/4" unit="cup"/>
+			<ingredient name="chopped celery" quantity="1/2" unit="cup"/>
+			<ingredient name="garlic powder" quantity="1" unit="teaspoon"/>
+			<ingredient name="diced potatoes" quantity="2" unit="cups"/>
+			<ingredient name="carrots, diced" quantity="2" unit=" "/>
+			<ingredient name="chicken broth" quantity="2" unit="cups"/>
+			<ingredient name="salt" quantity="1" unit="teaspoon"/>
+			<ingredient name="ground black pepper" quantity="1" unit="teaspoon"/>
+			<ingredient name="dried dill weed" quantity="1" unit="teaspoon"/>
+			<ingredient name="salmon" quantity="2" unit="ounce"/>
+			<ingredient name="evaporated milk" quantity="1" unit="fluid"/>
+			<ingredient name="creamed corn" quantity="1" unit="ounce"/>
+			<ingredient name="Cheddar cheese, shredded" quantity="1/2" unit="pound"/>
+		</ingredients>
+		<procedure>Melt butter in a large pot over medium heat. Saute onion, celery, and garlic powder until onions are tender. Stir in potatoes, carrots, broth, salt, pepper, and dill. Bring to a boil, and reduce heat. Cover, and simmer 20 minutes.
+
+ Stir in salmon, evaporated milk, corn, and cheese. Cook until heated through.</procedure>
+	</recipe>
+</data>
