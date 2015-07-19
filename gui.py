@@ -1,5 +1,5 @@
-from tkinter import Tk, BOTH, X, Y, Menu, RAISED, LEFT, RIGHT, TOP, BOTTOM, N, S, E, W
-from tkinter.ttk import Frame, Button, Style, Label
+from tkinter import Tk, BOTH, X, Y, Menu, RAISED, LEFT, RIGHT, TOP, BOTTOM, END, N, S, E, W, EXTENDED, VERTICAL, StringVar, Listbox, Text
+from tkinter.ttk import Frame, Button, Style, Label, OptionMenu, Entry, Scrollbar
 import sys
 
 
@@ -76,33 +76,137 @@ class windowFrame(Frame):
         bSaveRecipe = Button(frameToolbar, text="Save Recipe", command=self.recipeSave, width=buttonwidth)
         bSaveRecipe.pack(side=LEFT, padx=buffer, pady=buffer)
         
-        frameRecipeList = Frame(self, relief=RAISED, borderwidth=1, width=200)
+        # Recipe list section
+        frameRecipeList = Frame(self, borderwidth=1, width=200)
+        frameRecipeList.pack_propagate(0)
         frameRecipeList.pack(side=LEFT, fill=Y)
         Label(frameRecipeList, text="Recipe List").pack()
+        # Category option menu
+        default = StringVar(frameRecipeList)
+        default.set("----")
+        recipeCatagories = OptionMenu(frameRecipeList, default,"----","None","Cat 1","Cat 2","Cat 3")
+        recipeCatagories.pack(side=TOP, fill=X)
+        # Filter Frame
+        frameFilter = Frame(frameRecipeList, relief=RAISED, borderwidth=1, width=200)
+        frameFilter.pack(side=TOP, fill=X)
+        Label(frameFilter, text="Filter...").pack()
+        # Filter text
+        filterText = Entry(frameFilter)
+        filterText.pack_propagate(0)
+        filterText.pack(side=LEFT, fill=X)
+        # Filter Button
+        filterButton = Button(frameFilter, text="Go", command=self.placeholder)
+        filterButton.pack_propagate(0)
+        filterButton.pack(side=RIGHT)
+        # Recipe Box Frame
+        frameRecipeBox = Frame(frameRecipeList, relief=RAISED, borderwidth=1)
+        frameRecipeBox.pack(side=TOP, fill=BOTH, expand=1)
+        # Recipe List box
+        recipeListScroll = Scrollbar(frameRecipeBox, orient=VERTICAL)
+        recipeList = Listbox(frameRecipeBox, selectmode=EXTENDED, yscrollcommand=recipeListScroll.set)
+        recipeList.pack(side=LEFT, fill=BOTH, expand=1)
+        recipeListScroll.config(command=recipeList.yview)
+        recipeListScroll.pack(side=RIGHT, fill=Y)
+        for item in range(1,1001):
+            recipeList.insert(END, "Recipe "+str(item))
         
-        frameSpacer = Frame(self, relief=RAISED, borderwidth=1, width=50)
-        frameSpacer.pack(side=LEFT, fill=Y)
-        Label(frameSpacer, text="Spacer").pack()
         
-        frameRecipeInfo = Frame(self, relief=RAISED, borderwidth=1, width=200)
+        # Spacer
+        frameSpacer1 = Frame(self, borderwidth=1, width=50)
+        frameSpacer1.pack_propagate(0)
+        frameSpacer1.pack(side=LEFT, fill=Y)
+        
+        # Recipe info section
+        frameRecipeInfo = Frame(self, borderwidth=1, width=200)
+        frameRecipeInfo.pack_propagate(0)
         frameRecipeInfo.pack(side=LEFT, fill=Y)
-        Label(frameRecipeInfo, text="Recipe Info").pack()
+        # Recipe name
+        Label(frameRecipeInfo, text="Recipe Name:", anchor=E, justify=LEFT).pack()
+        recipeName = Entry(frameRecipeInfo)
+        recipeName.pack(side=TOP, fill=X)
+        # Prep Time
+        framePrepTime = Frame(frameRecipeInfo)
+        framePrepTime.pack(side=TOP, fill=X)
+        Label(framePrepTime, text="Prep Time:", anchor=E, justify=LEFT).pack()
+        prepTime = Entry(framePrepTime)
+        prepTime.pack(side=LEFT, fill=X)
+        default = StringVar(framePrepTime)
+        default.set("----")
+        prepTimeUnit = OptionMenu(framePrepTime, default,"----","Min","Hr")
+        prepTimeUnit.pack(side=RIGHT, fill=X)
+        # Cook Time
+        frameCookTime = Frame(frameRecipeInfo)
+        frameCookTime.pack(side=TOP, fill=X)
+        Label(frameCookTime, text="Cook Time:", anchor=E, justify=LEFT).pack()
+        cookTime = Entry(frameCookTime)
+        cookTime.pack(side=LEFT, fill=X)
+        default = StringVar(frameCookTime)
+        default.set("----")
+        cookTimeUnit = OptionMenu(frameCookTime, default,"----","Min","Hr")
+        cookTimeUnit.pack(side=RIGHT, fill=X)
         
-        frameIngredients = Frame(self, relief=RAISED, borderwidth=1, width=300)
+        # Spacer
+        frameSpacer2 = Frame(self, borderwidth=1, width=10)
+        frameSpacer2.pack_propagate(0)
+        frameSpacer2.pack(side=LEFT, fill=Y)
+        
+        # Ingredient List
+        frameIngredients = Frame(self, borderwidth=1, width=300)
+        frameIngredients.pack_propagate(0)
         frameIngredients.pack(side=LEFT, fill=Y)
         Label(frameIngredients, text="Ingredients").pack()
+        # Ingredient Name
+        ingredientName = Entry(frameIngredients)
+        ingredientName.pack(side=TOP, fill=X)
+        # Ingredient info
+        frameIngredientQuantity = Frame(frameIngredients)
+        frameIngredientQuantity.pack(side=TOP, fill=X)
+        Label(frameIngredientQuantity, text="Ingredient Quantity:", anchor=E, justify=LEFT).pack()
+        ingredientQuantity = Entry(frameIngredientQuantity)
+        ingredientQuantity.pack(side=LEFT, fill=X)
+        default = StringVar(frameIngredientQuantity)
+        default.set("----")
+        ingredientUnit = OptionMenu(frameIngredientQuantity, default,"----","lbs","cups")
+        ingredientUnit.pack(side=RIGHT, fill=X, expand=1)
+        # Spacer
+        frameSpacer3 = Frame(frameIngredients, height=10)
+        frameSpacer3.pack_propagate(0)
+        frameSpacer3.pack(side=TOP, fill=X)
+        # Ingredient List buttons
+        frameIngredientButtons = Frame(frameIngredients)
+        frameIngredientButtons.pack(side=TOP, fill=X)
+        ingredientAdd = Button(frameIngredientButtons, text="+", command=self.placeholder)
+        ingredientAdd.pack(side=LEFT)
+        ingredientDel = Button(frameIngredientButtons, text="-", command=self.placeholder)
+        ingredientDel.pack(side=LEFT)
+        ingredientUp = Button(frameIngredientButtons, text=u"\u25B2", command=self.placeholder)
+        ingredientUp.pack(side=LEFT)
+        ingredientDwn = Button(frameIngredientButtons, text=u"\u25BC", command=self.placeholder)
+        ingredientDwn.pack(side=LEFT)
+        # Ingredient List Box Frame
+        frameIngredientList = Frame(frameIngredients, relief=RAISED, borderwidth=1)
+        frameIngredientList.pack(side=TOP, fill=BOTH, expand=1)
+        # Recipe List box
+        ingredientListScroll = Scrollbar(frameIngredientList, orient=VERTICAL)
+        ingredientList = Listbox(frameIngredientList, selectmode=EXTENDED, yscrollcommand=ingredientListScroll.set)
+        ingredientList.pack(side=LEFT, fill=BOTH, expand=1)
+        ingredientListScroll.config(command=ingredientList.yview)
+        ingredientListScroll.pack(side=RIGHT, fill=Y)
+        for item in range(1,1001):
+            ingredientList.insert(END, "Ingredient "+str(item))
         
-        frameProcedure = Frame(self, relief=RAISED, borderwidth=1)
+        # Spacer
+        frameSpacer4 = Frame(self, borderwidth=1, width=10)
+        frameSpacer4.pack_propagate(0)
+        frameSpacer4.pack(side=LEFT, fill=Y)
+        
+        
+        # Recipe Procedure
+        frameProcedure = Frame(self, borderwidth=1)
         frameProcedure.pack(side=LEFT, fill=BOTH, expand=1)
-        Label(frameProcedure, text="Procedure").pack()
-        
-        
-        
-        
-        
-        
-        
-        
+        Label(frameProcedure, text="Procedure", anchor=E, justify=LEFT).pack(side=TOP)
+        procedure = Text(frameProcedure, maxundo=30, undo=1)
+        procedure.pack(side=TOP, fill=BOTH, expand=1)
         
     def placeholder(self):
         print("Coming soon!")
@@ -114,8 +218,8 @@ class windowFrame(Frame):
 def main():
   
     root = Tk()
-    root.geometry("980x680+300+300")
-    root.minsize(600,350)
+    root.geometry("1024x680+300+300")
+    root.minsize(1024,350)
     app = windowFrame(root)
     root.mainloop()  
 
