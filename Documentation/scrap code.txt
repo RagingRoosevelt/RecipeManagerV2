@@ -1,0 +1,19 @@
+        Or overwrite the recipe
+        elif overwrite == True:
+            print("Overwriting recipe %s" % name)
+            self.dbCursor.execute("""UPDATE Recipes SET 
+                    Servings = ?,
+                    PrepTime = ?,
+                    PrepTimeUnit = ?,
+                    CookTime = ?,
+                    CookTimeUnit = ?,
+                    CookTemp = ?,
+                    CookTempUnit = ?
+                    WHERE Name = ?
+                """, (servings,prepTime,prepTimeUnit,cookTime,cookTimeUnit,cookTemp,cookTempUnit,name))
+            self.dbCursor.execute("""UPDATE Ingredients SET
+                   
+            """)
+            self.dbConnection.commit()
+        elif overwrite == False:
+            print("warning: Nothing written to database")
