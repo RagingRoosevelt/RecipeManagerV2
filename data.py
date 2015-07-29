@@ -3,7 +3,7 @@ import os.path as path
 import sqlite3 as sql
 import random 
 
-class Model:
+class Data:
     # Initialize database if it doesn't exist.
     def __init__(self):
         dbname = path.join(path.dirname(path.abspath(__file__)),'recipes.db')
@@ -38,8 +38,8 @@ class Model:
                     PrepTimeUnit TEXT, 
                     CookTime TEXT, 
                     CookTimeUnit TEXT, 
-                    CookTemp TEXT, 
-                    CookTempUnit TEXT);
+                    Procedure TEXT
+                    );
                 """)
             print("Initializing ingredient database...")
             self.dbCursor.executescript("""
@@ -50,9 +50,12 @@ class Model:
                     Name TEXT, 
                     Quantity TEXT, 
                     Unit TEXT,
+                    IngredientOrder INT,
                     FOREIGN KEY (RecipeID) REFERENCES Recipes(RecipeID));
                 """)
             print()
+            
+        self.sampleValues()
             
 
     # check if "filename" is an XML file
@@ -87,7 +90,7 @@ class Model:
         ingredients = []
         for ingredient in recipe['ingredients']:
             ingredients.append(recipe['ingredients'][ingredient])
-        '''procedure = recipe['procedure']'''
+        procedure = recipe['procedure']
         
         # check for the existence of entry to be updated
         self.dbCursor.execute("SELECT RecipeID FROM Recipes WHERE Name =:name", {"name": name})
@@ -101,17 +104,37 @@ class Model:
         if canwrite == True:
             print("\nAdding recipe %s..." % name)
             # Insert recipe metadata
-            self.dbCursor.execute("INSERT INTO Recipes VALUES(?,?,?,?,?,?,?,?,?);", (None, name, servings, prepTime, prepTimeUnit, cookTime, cookTimeUnit, cookTemp, cookTempUnit))
+            self.dbCursor.execute("INSERT INTO Recipes VALUES(?,?,?,?,?,?,?,?);", (None, name, servings, prepTime, prepTimeUnit, cookTime, cookTimeUnit, procedure))
             # Insert ingredients
             recipeID = self.dbCursor.lastrowid
+            ingredientOrder = 0
             for ingredient in ingredients:
-                self.dbCursor.execute("INSERT INTO Ingredients VALUES (?,?,?,?,?);", (None, recipeID) + ingredient)
+                self.dbCursor.execute("INSERT INTO Ingredients VALUES (?,?,?,?,?,?);", (None, recipeID) + ingredient + (ingredientOrder,))
+                ingredientOrder += 1
             self.dbConnection.commit()
         
 
+    # returns recipe list
+    def dbGetRecipeList(self):
+        self.dbCursor.execute("SELECT RecipeID,Name FROM Recipes")
+        return self.dbCursor.fetchall()
+    
+    
     # gets recipe by name
-    def dbGetRecipe(self, recipeName):
-        self.dbCursor.execute("SELECT * FROM Recipes WHERE Name =:recipeName", {"recipeName": recipeName})
+    def dbGetRecipeInfo(self, recipeID):
+        print("pulling recipe info for recipe %d from db" % recipeID)
+        self.dbCursor.execute("SELECT * FROM Recipes WHERE RecipeID =?", (recipeID,))
+        # Need to check for accidental recipes here
+        recipe = (self.dbCursor.fetchone(), None)
+        print(recipe)
+        self.dbCursor.execute("SELECT * FROM Ingredients WHERE RecipeID = ? ORDER BY IngredientOrder", (recipeID,))
+        ingredients = self.dbCursor.fetchall()
+        recipe = (recipe[0], ingredients)
+        return recipe
+        
+    
+    def dbGetIngredientInfo(self, ingredientID):
+        self.dbCursor.execute("SELECT * FROM Ingredients WHERE IngredientID = ?", (ingredientID,))
         return self.dbCursor.fetchone()
 
 
@@ -165,19 +188,30 @@ class Model:
         for name, recipe in recipes.items():
             self.dbAddRecipe(recipe)
         return recipes
-    
-dir = "E:\\Dropbox\\Documents\\Programming\\Cookbook Maker V2\\recipes"
-
-model = Model()
-
-recipes = model.xmlImport(path.join(dir,"Baked Ziti.xml"))
-recipes = model.xmlImport(path.join(dir,"Banana Bread.xml"))
-recipes = model.xmlImport(path.join(dir,"Chocolate-Candy Cane Cake.xml"))
-recipes = model.xmlImport(path.join(dir,"Chocolate-Candy Cane Cake.xml"))
         
-#print("\n" + str(model.dbGetRecipe("Baked Ziti")))
+    def sampleValues(self):
+        dir = "E:\\Dropbox\\Documents\\Programming\\Cookbook Maker V2\\recipes"
+        self.xmlImport(path.join(dir,"Baked Ziti.xml"))
+        self.xmlImport(path.join(dir,"Banana Bread.xml"))
+        self.xmlImport(path.join(dir,"Chocolate-Candy Cane Cake.xml"))
+        self.xmlImport(path.join(dir,"Grandma's Gingerbread Pancakes.xml"))
+        self.xmlImport(path.join(dir,"New York Cheesecake.xml"))
+        self.xmlImport(path.join(dir,"Pork Cutlets with Cranberry Wine Sauce.xml"))
+        self.xmlImport(path.join(dir,"Salmon Chowder.xml"))
+        self.xmlImport(path.join(dir,"Sausage Cheese Balls.xml"))
+        self.xmlImport(path.join(dir,"Simple Scones.xml"))
+        self.xmlImport(path.join(dir,"Slow Cooker Chicken and Dumplings.xml"))
+        self.xmlImport(path.join(dir,"Slow Cooker French Onion Soup.xml"))
+        self.xmlImport(path.join(dir,"Slow Cooker Stuffing.xml"))
+        self.xmlImport(path.join(dir,"Winter Leek and Potato Soup.xml"))
+        
+    
 
-recipe = model.xmlRead(path.join(dir,"Salmon Chowder.xml"))['Salmon Chowder']
-#recipe['name'] = "Chocolate-Candy Cane Cake"
-model.dbAddRecipe(recipe)
+
+model = Data()
+
+        
+#print("\nReturned recipe: " + str(model.dbGetRecipeInfo("Baked Ziti")))
+#print("\nRecipe list: " + str(model.dbGetRecipeList()))
+
 
