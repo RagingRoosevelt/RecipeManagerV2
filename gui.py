@@ -18,22 +18,22 @@ class windowFrame(Frame):
          
         self.parent = parent
         
-        self.recipeList = None          # Listbox
-        self.recipeName = None          # Entry
-        self.prepTime = None            # Entry
-        self.prepTimeUnit = None        # OptionMenu
-        self.cookTime = None            # Entry
-        self.cookTimeUnit = None        # OptionMenu
-        self.ingredientName = None      # Entry
-        self.ingredientQuantity = None  # Entry
-        self.ingredientUnit = None      # OptionMenu
-        self.ingredientList = None      # Listbox
-        self.procedure = None           # Text
+        self.recipeList = None         # Listbox
+        self.recipeName = None         # Entry
+        self.prepTime = None           # Entry
+        self.prepTimeUnit = None       # OptionMenu
+        self.cookTime = None           # Entry
+        self.cookTimeUnit = None       # OptionMenu
+        self.ingredientName = None     # Entry
+        self.ingredientQuantity = None # Entry
+        self.ingredientUnit = None     # OptionMenu
+        self.ingredientList = None     # Listbox
+        self.procedure = None          # Text
         
         self.recipes = []
         self.ingredients = []
-        self.activeRecipeID = None
-        self.activeIngredientID = None
+        self.activeRecipeID = {"lst": None, "db": None}     # (listID, dbID)
+        self.activeIngredientID = {"lst": None, "db": None} # (listID, dbID)
         
         self.initUI()
         
@@ -42,25 +42,25 @@ class windowFrame(Frame):
         
     
     # display an error message to the user
-    def errorMsg(self, error):
+    def msgError(self, error):
         print("error: " + error)
         showerror("ERROR!", error)
         
     
     # dispaly a warning to the user
-    def warningMsg(self, warning):
+    def msgWarning(self, warning):
         showwarning("Warning!", warning)
     
     
     # display caution message to user
-    def cautionMsg(self, caution):
+    def msgCaution(self, caution):
         return askokcancel("Caution!", caution)
     
     
     # Get current ingredient selection from ingredient list
     def getIngredientSelection(self):
         if self.ingredients == []:
-            self.warningMsg("No ingredient selected.  Try loading a recipe.")
+            self.msgWarning("No ingredient selected.  Try loading a recipe.")
             return -1
         else:
             return self.ingredientList.index(ACTIVE)
@@ -68,7 +68,17 @@ class windowFrame(Frame):
     
     # Get current recipe selection from recipe list
     def getRecipeSelection(self):
-        selection = self.recipeList.index(ACTIVE)
+        if self.recipes == []:
+            self.msgError("No recipes available.")
+            return -1
+        else:
+            selection = list(self.recipeList.curselection())
+            
+            if selection == []:
+                self.msgError("No recipe selected.")
+                return -1
+            else:
+                return selection
     
     
     # retrieve recipe list from the database
@@ -100,14 +110,15 @@ class windowFrame(Frame):
     
     # Populate the recipe list from a provided list of recipes
     def populateRecipeList(self, recipes):
+        self.recipeList.delete(0,END)
         for recipe in [recipe[1] for recipe in recipes]:
             self.recipeList.insert(END, recipe)
             
     
     # save currently loaded ingredient info to database
     def ingredientSaveInfo(self):
-        if self.activeIngredientID == None:
-            self.warningMsg("No ingredient is loaded.")
+        if self.activeIngredientID["lst"] == None:
+            self.msgWarning("No ingredient is loaded.")
         else:
             print("Saving ingredient info")
             
@@ -115,7 +126,7 @@ class windowFrame(Frame):
             quantity = self.ingredientQuantity.get()
             unit = self.ingredientUnit.get()
             
-            ingredient = self.ingredients[self.activeIngredientID]
+            ingredient = self.ingredients[self.activeIngredientID["lst"]]
             
             print(ingredient)
             
@@ -123,7 +134,7 @@ class windowFrame(Frame):
             
             print(ingredient)
             
-            self.ingredients[self.activeIngredientID] = ingredient
+            self.ingredients[self.activeIngredientID["lst"]] = ingredient
             
             self.populateIngredientList(self.ingredients)
         
@@ -136,15 +147,17 @@ class windowFrame(Frame):
             if currentSelection == -1:
                 return -1
             else:
-                self.activeIngredientID = currentSelection#self.ingredients[currentSelection][0]
+                self.activeIngredientID["lst"] = currentSelection
+                self.activeIngredientID["db"] = self.ingredients[currentSelection][0]
                 print("\n\nLoading ingredient info for ID " + str(self.activeIngredientID))
-                ingredient = self.ingredients[self.activeIngredientID]
+                ingredient = self.ingredients[self.activeIngredientID["lst"]]
         elif ID >= 0:
-            self.activeIngredientID = ID
-            ingredient = self.ingredients[self.activeIngredientID]
+            self.activeIngredientID["lst"] = ID
+            self.activeIngredientID["db"] = self.ingredients[ID][0]
+            ingredient = self.ingredients[self.activeIngredientID["lst"]]
         elif ID == -1:
             print("Clearing ingredient info...")
-            self.activeIngredientID = None
+            self.activeIngredientID = {"lst": None, "db": None}
             ingredient = ["","","","",""]
             
         name = ingredient[2]
@@ -165,8 +178,8 @@ class windowFrame(Frame):
         if currentSelection == -1:
             return -1
         elif currentSelection > 0:
-            if currentSelection == self.activeIngredientID or currentSelection-1 == self.activeIngredientID:
-                if not self.cautionMsg("Reordering the actively loaded ingredient could cause duplicate and deleted entries when saving.  Continue?"):
+            if currentSelection == self.activeIngredientID["lst"] or currentSelection-1 == self.activeIngredientID["lst"]:
+                if not self.msgCaution("Reordering the actively loaded ingredient could cause duplicate and deleted entries when saving.  Continue?"):
                     return
             print("ingredient %d up\n\n" % currentSelection)
             
@@ -192,8 +205,8 @@ class windowFrame(Frame):
         if currentSelection == -1:
             return -1
         elif currentSelection < len(self.ingredients)-1:
-            if currentSelection == self.activeIngredientID or currentSelection + 1 == self.activeIngredientID:
-                if not self.cautionMsg("Reordering the actively loaded ingredient could cause duplicate and deleted entries when saving.  Continue?"):
+            if currentSelection == self.activeIngredientID["lst"] or currentSelection + 1 == self.activeIngredientID["lst"]:
+                if not self.msgCaution("Reordering the actively loaded ingredient could cause duplicate and deleted entries when saving.  Continue?"):
                     return
             print("ingredient %d down\n\n" % currentSelection)
             
@@ -208,10 +221,10 @@ class windowFrame(Frame):
     
     # Add an ingredient slot to the bottom of the list
     def ingredientAdd(self):
-        if self.activeRecipeID == None:
-            self.warningMsg("No recipe loaded.")
+        if self.activeRecipeID["lst"] == None:
+            self.msgWarning("No recipe loaded.")
         else:
-            blankIngredient = (None, self.activeRecipeID, "blank", "?", "?", len(self.ingredients))
+            blankIngredient = (None, self.activeRecipeID["db"], "blank", "?", "?", len(self.ingredients))
             self.ingredients.append(blankIngredient)
                 
             self.populateIngredientList(self.ingredients)
@@ -230,7 +243,7 @@ class windowFrame(Frame):
         #######################################################
         
         currentSelection = self.getIngredientSelection()
-        if currentSelection == -1 or self.activeRecipeID == None:
+        if currentSelection == -1 or self.activeRecipeID["lst"] == None:
             return -1
         elif currentSelection < len(self.ingredients) and currentSelection >= 0:
             print("remove ingredient %d\n\n" % currentSelection)
@@ -273,7 +286,7 @@ class windowFrame(Frame):
         recipeID = self.recipeList.curselection()
         print(recipeID)
         if len(recipeID) == 0:
-            self.errorMsg("No recipes selected.")
+            self.msgError("No recipes selected.")
             return
         elif len(recipeID) > 1:
             if not askokcancel("Caution!", "Are you sure you want to delete these %d recipes?" % len(recipeID)):
@@ -290,23 +303,26 @@ class windowFrame(Frame):
     
     # load currently selected recipe
     def recipeLoad(self, recipe=None):
-        activeSelection = self.recipeList.curselection()
+        activeSelection = self.getRecipeSelection()
         
-        if len(activeSelection) == 0 and recipe==None:
-            self.errorMsg("No recipe selected.")     
-        elif len(activeSelection) > 1 and recipe==None:
-            self.errorMsg("Too many recipes selected.")
+        if activeSelection == -1:
+            return -1
+        elif len(activeSelection) > 1:
+            self.msgError("Too many recipes selected.")
+            return -1
         else:
             if recipe == None:
-                recipeID = self.recipes[activeSelection[0]][0]
-                print("trying to load recipe id #: %d" % recipeID)
+                listID = activeSelection[0]
                 
-                self.activeRecipeID = recipeID
-                print("Loading recipe %d..." % self.activeRecipeID)
-                recipe = self.getRecipeInfo(self.activeRecipeID)
+                self.activeRecipeID["lst"] = listID
+                self.activeRecipeID["db"] = self.recipes[listID][0]
+                
+                print(self.activeRecipeID)
+                
+                recipe = self.getRecipeInfo(self.activeRecipeID["db"])
             else:
                 print("Clearing recipe info...")
-                self.activeRecipeID = None
+                self.activeRecipeID = {"lst": None, "db": None}
                 self.ingredientLoadInfo(-1)
             print(recipe)
             name = recipe[0][1]
@@ -335,7 +351,31 @@ class windowFrame(Frame):
     
     # save changes to active recipe to database
     def recipeSave(self,event=""):
-        print("Saving recipe...")
+        print(self.activeRecipeID)
+        
+        if self.activeRecipeID["lst"] == None:
+            self.msgError("No active recipe to save.")
+            return -1
+        
+        
+        listID = self.activeRecipeID["lst"]
+        dbID = self.activeRecipeID["db"]
+        
+        name = self.recipeName.get()
+        servings = 0#self.recipes[listID][2]
+        prepTime = self.prepTime.get()
+        prepUnit = None#self.prepTimeUnit.????()
+        cookTime = self.cookTime.get()
+        cookUnit = None#self.cookTimeUnit.????()
+        procedure = self.procedure.get(0.0, END)
+    
+        recipeInfo = (dbID, name, servings, prepTime, prepUnit, cookTime, cookUnit, procedure)
+        
+        recipe = (recipeInfo, self.ingredients) 
+        
+        self.recipes[listID] = (dbID, name)
+        
+        self.populateRecipeList(self.recipes)
         
     
     # quit the program
